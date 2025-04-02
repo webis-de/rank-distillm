@@ -48,11 +48,11 @@ lightning-ir re_rank --config configs/predict-trec-dl.yaml
 ## Citation
 
 ```bibtex
-@InProceedings{schlatt:2025c,
+@InProceedings{schlatt:2025,
   address =                  {Berlin Heidelberg New York},
   author =                   {Ferdinand Schlatt and Maik Fr{\"o}be and Harrisen Scells and Shengyao Zhuang and Bevan Koopman and Guido Zuccon and Benno Stein and Martin Potthast and Matthias Hagen},
   booktitle =                {Advances in Information Retrieval. 47th European Conference on IR Research (ECIR 2025)},
-  doi =                      {10.48550/arXiv.2405.07920},
+  doi =                      {10.1007/978-3-031-88714-7_31},
   month =                    apr,
   publisher =                {Springer},
   series =                   {Lecture Notes in Computer Science},
