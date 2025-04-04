@@ -29,6 +29,8 @@ model:
     loss_functions:
       - class_path: RankNet
       # - class_path: ApproxRankMSE
+      #   init_args:
+      #     discount: log2
 optimizer:
   class_path: torch.optim.AdamW
   init_args:
