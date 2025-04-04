@@ -8,42 +8,44 @@ We use the [`lightning-ir`](https://github.com/webis-de/lightning-ir) library fo
 
 ## Model Zoo
 
-| Model Name                                                          | TREC DL 19/20 nDCG@10 (BM25) | TIREx nDCG@10 |
-| ------------------------------------------------------------------- | ---------------------------- | ------------- |
-| [monoelectra-base](https://huggingface.co/webis/monoelectra-base)   | 0.715                        | 0.416         |
-| [monoelectra-large](https://huggingface.co/webis/monoelectra-large) | 0.730                        | 0.434         |
+| Model Name                                                                | TREC DL 19 (BM25) | TREC DL 20 (BM25) | TREC DL 19 (ColBERTv2) | TREC DL 20 (ColBERTv2) |
+| ------------------------------------------------------------------------- | ----------------- | ----------------- | ---------------------- | ---------------------- |
+| [webis/monoelectra-base](https://huggingface.co/webis/monoelectra-base)   | 0.721             | 0.711             |  0.770                 |  0.770                 |
+| [webis/monoelectra-large](https://huggingface.co/webis/monoelectra-large) | 0.732             | 0.727             |  0.766                 |  0.796                 |
+
+(nDCG@10 on TREC DL 19 and TREC DL 20)
+
+
+To reproduce the results, run the following command:
+
+```bash
+lightning-ir re_rank --config ./configs/re-rank.yaml --model.model_name_or_path <MODEL_NAME>
+```
 
 ### Data
 
-The run files for MS MARCO training queries for different first-stage retrieval models and LLM re-rankers can be downloaded from [Zenodo](https://zenodo.org/records/11147862).
+The ColBERTv2 distillation data from Rank-DistiLLM is directly integrated into lightning-ir with the dataset id `msmarco-passage/train/rank-distillm-rankzephyr`. You can use this dataset id in the `data.train_dataset.run_path_or_id` argument of the configuration files.
 
-### Fine-tuning
+The run files for MS MARCO training queries for different first-stage retrieval models and LLM re-rankers can be downloaded from [Zenodo](https://zenodo.org/records/15131907).
 
-To fine-tune a model using ColBERTv2 hard negatives, update the `train_dataset` argument in `configs/monoelectra-fine-tune-colbert.yaml` to point to the downloaded ColBERTv2 run file.
+## Fine-Tuning
 
-Then run the following command to fine-tune the model:
-
-```bash
-lightning-ir fit --config configs/monoelectra-fine-tune-colbert.yaml
-```
-
-To fine-tune a model using our proposed distillation method, update the `train_dataset` argument in `configs/monoelectra-fine-tune-distillation.yaml` to point to the downloaded distillation run file.
-
-Then run the following command to fine-tune the model:
+Pre-fine-tuning (first stage fine-tuning using positive samples from MS MARCO and hard-negatives sampled using ColBERTv2 with InfoNCE) can be done using the following command.
 
 ```bash
-lightning-ir fit --config configs/monoelectra-fine-tune-distillation.yaml
+lightning-ir fit --config ./configs/pre-finetune.yaml
 ```
 
-### Inference
-
-We provide an example configuration file for running inference on TREC Deep Learning 2019 and 2020 using our fine-tuned models in `configs/predict-trec-dl.yaml`.
-
-To re-rank passages, run the following command (this will download the fine-tuned from HuggingFace and the MS MARCO passage corpus using [`ir_datasets`](https://ir-datasets.com/)):
+The model can be further fine-tuned (second stage fine-tuning using the RankDistiLLM dataset with RankNet or Approx Discounted Rank-MSE loss) using the following command. The model checkpoint from the pre-fine-tuning stage can be used as a starting point.
 
 ```bash
-lightning-ir re_rank --config configs/predict-trec-dl.yaml
+lightning-ir fit --config ./configs/fine-tune.yaml
 ```
+
+## Reproduction
+
+We have uploaded the run files to reproduce the results in [Zenodo](https://zenodo.org/records/15150456). Download and unpack the `experiments.tar.gz` file and then run the `notebooks/effectiveness.ipynb` notebook to reproduce the results.
+
 
 ## Citation
 

@@ -1,0 +1,17 @@
+{
+    "info": {
+        "name": "Untitled",
+        "description": "No description available."
+    },
+    "params": {
+        "fonts": {
+            "family": "serif"
+        },
+        "grid": {
+            "draw": true,
+            "width": 0.5
+        }
+    },
+    "overrides": {},
+    "transforms": {}
+}
