@@ -1,0 +1,36 @@
+trainer:
+  precision: bf16-mixed
+  logger: false
+  enable_checkpointing: false
+data:
+  class_path: LightningIRDataModule
+  init_args:
+    num_workers: 1
+    inference_batch_size: 4
+    inference_datasets:
+      - class_path: RunDataset
+        init_args:
+          run_path_or_id: ./data/__colbert__msmarco-passage-trec-dl-2019-judged.run
+          depth: 100
+          sampling_strategy: top
+      - class_path: RunDataset
+        init_args:
+          run_path_or_id: ./data/__colbert__msmarco-passage-trec-dl-2020-judged.run
+          depth: 100
+          sampling_strategy: top
+      - class_path: RunDataset
+        init_args:
+          run_path_or_id: ./data/__bm25__msmarco-passage-trec-dl-2019-judged.run
+          depth: 100
+          sampling_strategy: top
+      - class_path: RunDataset
+        init_args:
+          run_path_or_id: ./data/__bm25__msmarco-passage-trec-dl-2020-judged.run
+          depth: 100
+          sampling_strategy: top
+model:
+  class_path: CrossEncoderModule
+  init_args:
+    model_name_or_path: null
+    evaluation_metrics:
+    - nDCG@10

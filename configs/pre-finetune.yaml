@@ -1,0 +1,34 @@
+seed_everything: 42
+trainer:
+  precision: bf16-mixed
+  max_steps: 20000
+data:
+  class_path: LightningIRDataModule
+  init_args:
+    num_workers: 4
+    train_batch_size: 32
+    train_dataset:
+      class_path: RunDataset
+      init_args:
+        run_path_or_id: msmarco-passage/train/rank-distillm-colbert
+        targets: relevance
+        depth: 200
+        sample_size: 8
+        sampling_strategy: single_relevant
+        add_docs_not_in_ranking: true
+model:
+  class_path: CrossEncoderModule
+  init_args:
+    model_name_or_path: google/electra-base-discriminator
+    # model_name_or_path: google/electra-large-discriminator
+    config:
+      class_path: CrossEncoderConfig
+      init_args:
+        query_length: 32
+        doc_length: 256
+    loss_functions:
+      - class_path: InfoNCE
+optimizer:
+  class_path: torch.optim.AdamW
+  init_args:
+    lr: 1.0e-05
