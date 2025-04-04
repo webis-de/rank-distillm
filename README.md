@@ -1,4 +1,4 @@
-# MS MARCO LLM Distillation
+# Rank-DistiLLM
 
 This repository contains the code and data for the paper [`Rank-DistiLLM: Closing the Effectiveness Gap Between Cross-Encoders and LLMs for Passage Re-ranking`](https://webis.de/publications.html#schlatt_2025c) accepted at ECIR'25.
 
